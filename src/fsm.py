@@ -31,12 +31,6 @@ class FixedShapeMachine:
         return middle in names
 
     @staticmethod
-    def is_prefix_compatible(text: str, prefix: str) -> bool:
-        if len(text) <= len(prefix):
-            return prefix.startswith(text)
-        return text.startswith(prefix)
-
-    @staticmethod
     def is_suffix_compatible(text: str, suffix: str) -> bool:
         if len(text) <= len(suffix):
             return suffix.endswith(text)
