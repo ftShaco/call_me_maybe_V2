@@ -67,5 +67,7 @@
     "returns": {
       "type": "string"
     }
-  }
+  },
+  {"name": "fn_get", "description": "Get a raw value by key.", "parameters": {"key": {"type": "string"}}, "returns": {"type": "string"}},
+  {"name": "fn_get_square_root", "description": "Square root of a number.", "parameters": {"a": {"type": "number"}}, "returns": {"type": "number"}}
 ]

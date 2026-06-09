@@ -31,5 +31,23 @@
   },
   {
     "prompt": "Substitute the word 'cat' with 'dog' in 'The cat sat on the mat with another cat'"
+  },
+  {
+    "prompt": "Add -5 and 12"
+  },
+  {
+    "prompt": "What is 3.5 plus 1.5?"
+  },
+  {
+    "prompt": "Greet "
+  },
+  {
+    "prompt": "Reverse the string \"\""
+  },
+  {
+    "prompt": "Compute the square root of negative four"
+  },
+  {
+    "prompt": "Do something completely unrelated to any function" 
   }
 ]
