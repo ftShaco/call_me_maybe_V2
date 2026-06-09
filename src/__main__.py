@@ -1,8 +1,10 @@
 import sys
 from .llm import LLM
-from .io_files import load_ft_definitions, load_prompts
+from .io_files import load_ft_definitions, load_prompts, InputError
 from .parser import parse_args
-from .models import InputError
+from .generate import generate_call
+import json
+import os
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -14,19 +16,38 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error occured: {e}", file=sys.stderr)
         return 1
 
-    # print(f"Number of functions definition: {len(functions)}")
-    # for f in functions:
-    #     print(f)
-    # print(f"Number of prompts: {len(prompts)}")
-    # for p in prompts:
-    #     print(p)
-
     llm = LLM()
-    ids = llm.encode("What is the sum of 2 and 3?")
-    print("token ids:", ids)
-    print("decoded back:", llm.decode(ids))
-    logits = llm.next_token_logits(ids)
-    print("num logits:", len(logits))
+    results = []
+    for entry in prompts:
+        try:
+            raw = generate_call(llm, functions, entry.prompt)
+            call = json.loads(raw)
+            results.append({
+                "prompt": entry.prompt,
+                "name": call["name"],
+                "parameters": call["parameters"],
+            })
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"Warning: could not generate a valid call for "
+                  f"{entry.prompt!r}: {e}", file=sys.stderr)
+
+    output_dir = os.path.dirname(args.output)
+    if output_dir:
+        try:
+            os.makedirs(output_dir, exist_ok=True)
+        except OSError as e:
+            print(f"Error: Failed to create output directory '{output_dir}'"
+                  f".\nDetails: {e}", file=sys.stderr)
+            return 1
+
+    try:
+        with open(args.output, "w", encoding="utf-8") as f:
+
+            json.dump(results, f, indent=4)
+    except OSError as e:
+        print(f"Error: Failed to write results to '{args.output}'.\n"
+              f"Details: {e}", file=sys.stderr)
+        return 1
 
     return 0
 
