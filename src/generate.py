@@ -48,6 +48,7 @@ def _step(llm, coordinator: Coordinator, prompt_ids: list, output_text: str):
             continue
         candidate = output_text + piece
         if coordinator.accept(candidate):
+            print(piece, end="", flush=True)
             return candidate
     return None
 

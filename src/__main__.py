@@ -5,6 +5,7 @@ from .parser import parse_args
 from .generate import generate_call
 import json
 import os
+import time
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -18,7 +19,11 @@ def main(argv: list[str] | None = None) -> int:
 
     llm = LLM()
     results = []
-    for entry in prompts:
+    start = time.perf_counter()
+    total = len(prompts)
+    for i, entry in enumerate(prompts, start=1):
+        print(f"{i}/{total} processing...\n", file=sys.stderr)
+        print(f"User prompt: {entry.prompt}\n")
         try:
             raw = generate_call(llm, functions, entry.prompt)
             call = json.loads(raw)
@@ -27,10 +32,13 @@ def main(argv: list[str] | None = None) -> int:
                 "name": call["name"],
                 "parameters": call["parameters"],
             })
+            elapsed = time.perf_counter() - start
         except (json.JSONDecodeError, KeyError) as e:
             print(f"Warning: could not generate a valid call for "
                   f"{entry.prompt!r}: {e}", file=sys.stderr)
 
+    print(f"\nProcessed {total} prompt(s) in {elapsed:.1f}s "
+          f"({elapsed/total:.1f}s per prompt).", file=sys.stderr)
     output_dir = os.path.dirname(args.output)
     if output_dir:
         try:
