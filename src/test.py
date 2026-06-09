@@ -2,14 +2,13 @@ from .fsm import FixedShapeMachine
 from .validators import NameValidator, NumberValidator, StringValidator
 
 
-
 def main():
-    # machine = FixedShapeMachine('{"name": "', '"}')
-    # print(machine.is_complete('{"name": "fn_greet"}'))
-    # print(machine.is_complete('{"name": "fn_g'))
-    # print(machine.is_complete('{"name": ""}'))
-    # print(machine.is_complete('{"name": "x"}'))
-    # print("hello".startswith(""))
+    machine = FixedShapeMachine('{"name": "', '"}')
+    print(machine.is_complete('{"name": "fn_greet"}'))
+    print(machine.is_complete('{"name": "fn_g'))
+    print(machine.is_complete('{"name": ""}'))
+    print(machine.is_complete('{"name": "x"}'))
+    print("hello".startswith(""))
 
     names = ["test", "hello", "123"]
     name_valid = NameValidator(names)
@@ -26,8 +25,6 @@ def main():
     print(str_valid.accept('coi"ff'))
     print(str_valid.is_complete("coiff"))
     print(str_valid.accept('"coiff"'))
-
-
 
 
 if __name__ == "__main__":
